@@ -1,0 +1,134 @@
+
+/* Menu */
+
+.menu {
+    align-items: center;
+    background-color: var(--cor-header);
+    border-bottom: 3px solid var(--cor-linha-menu);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding: 12px;
+}
+
+.menu__logo {
+    margin-left: 3rem;
+    max-width: 3.5rem;
+}
+
+.menu__nav {
+    align-items: center;
+    display: flex;
+    margin-right: 6rem;
+}
+
+.menu__nav-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+}
+
+.menu__nav-link {
+    color: var(--cor-link-menu);
+    font-family: 'Poppins', sans-serif;
+    margin: 0 32px;
+    position: relative;
+    text-decoration: none;
+    text-transform: capitalize;
+}
+
+.menu__nav-link:hover {
+    color: var(--cor-botao-hover);
+}
+
+.menu__nav-link::after {
+    content: '';
+    height: 2px;
+    width: 0%;
+}
+
+.menu__nav-link:hover::after {
+  background-color: var(--cor-botao-hover);
+  bottom: -3px;
+  content: '';
+  height: 2px;
+  left: 0;
+  position: absolute;
+  transition: all 0.4s;
+  width: 100%;
+}
+
+.special-item {
+    border: 2px solid var(--cor-botao);
+    border-radius: 4px;
+    color: var(--cor-botao-hover);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-left: 64px;
+    padding: 0.5rem 3rem;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: all 0.3s;
+}
+
+.special-item:hover {
+    background-color: var(--cor-botao);
+    color: var(--cor-botao-hover);
+}
+
+.user {
+    align-items: center;
+    border: 1px solid #C6C6C6;
+    border-radius: 4px;
+    color: #C6C6C6;
+    display: flex;
+    font-family:  'Quicksand', sans-serif;
+    gap: 5px;
+    margin-left: 4rem;
+    text-transform: capitalize;
+    padding: .3rem 2rem .3rem 1.5rem;
+    transition: .5s;
+}
+
+.user-link {
+    color: #C6C6C6;
+    font-weight: bold;
+}
+
+.user:hover {
+    background-color: #C6C6C6;
+    color: var(--cor-header);
+}
+
+.modal {
+   font-family: 'Quicksand', sans-serif;
+}
+
+.modal-body {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.envio-modal {
+    background-color: var(--cor-botao);
+    border-radius: 6px;
+    color: var(--cor-cabecalho-texto);
+    font-weight: bold;
+    margin: 10px 0;
+    width: 300px;
+    text-align: center;
+    padding: 10px 20px;
+}
+
+.envio-modal i {
+    margin-left: 5px;
+}
+
+.envio-modal:hover {
+    color: var(--cor-cabecalho-texto);
+    background-color: var(--cor-botao-envio-hover);
+    font-weight: 600;
+}

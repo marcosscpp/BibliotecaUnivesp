@@ -1,0 +1,64 @@
+{% extends "template.html" %}
+
+{% block imports %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+{% endblock %}
+{% block conteudo %}
+
+<div class="loader-wrapper">
+    <div class="loader"></div>
+</div>
+
+{% if session.get("admnistrador_logado") %}
+<a class="botao-tabela novo-btn" href="{{ url_for('novo_livro') }}"><i class="fa-sharp fa-regular fa-plus"></i> Novo Livro</a>
+{% endif %}
+<a class="botao-tabela exibicao-btn" href="{{ url_for('lista_card') }}"><i class="fa-solid fa-rotate"></i>Mudar Exibição dos Livros</a>
+
+
+{% if session.get("usuario_logado") %}
+<a href="{{ url_for('limpar_reserva') }}">Tirar reserva</a>
+{% endif %}
+
+<table id="tabela-livros" class="table table-sm table-striped table-responsive content-table">
+    <thead class="thead-default">
+        <tr>
+            <th class="codigo">ID</th>
+            <th class="nome">Nome</th>
+            <th class="categoria">Categoria</th>
+            <th>Disponibilidade</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for livro in livros %}
+        <tr>
+            <td class="align-middle">{{ livro.id }}</td>
+            <td class="align-middle">{{ livro.quantidade }} -- {{ livro.nome }}</td>
+            <td class="align-middle">{{ livro.categoria }}</td>
+            <td {% if livro.disponibilidade %} class="text-success align-middle" {% else %}class="text-danger align-middle" {% endif %}>
+                {% if livro.disponibilidade %}<p class="status status--sucess">Disponível</p>{% else %}<p class="status status--danger">Indisponível</p>{% endif %}
+            </td>
+
+            <td class="align-middle">
+                {% if session.get("admnistrador_logado") %}
+                <a href="{{ url_for('editar', id=livro.id) }}"><i class="fa-solid fa-square-pen" style="color: #213454;"></i></a>
+                <a href="{{ url_for('deletar', id=livro.id)}}"><i class="fa-solid fa-trash" style="color: #d1001f;"></i></a>
+                {% endif %}
+                {% if session.get("usuario_logado") and livro.disponibilidade %}
+                <a href="{{ url_for('reservar_livro', id=livro.id) }}" class="reservar">Reservar <i class="fa-solid fa-book"></i></a>
+                {% endif %}
+                {% if session.get("usuario_logado") and not livro.disponibilidade %}<i class="fa-solid fa-bookmark"></i>{% endif %}
+                <a href="{{ url_for('livro_completo', id=livro.id) }}"><i class="fa-solid fa-circle-info" style="color: #3169c9;"></i></a>
+            </td>
+        </tr>
+        </a>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='datatable.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='loading.js') }}"></script>
+{% endblock %}

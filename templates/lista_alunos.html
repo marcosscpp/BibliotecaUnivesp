@@ -1,0 +1,35 @@
+{% extends "template.html" %}
+{% block conteudo %}
+<table class="table table-striped table-responsive table-bordered">
+    <thead class="thead-default">
+        <tr>
+            <th>Nome</th>
+            <th>RA</th>
+            <th>Código de livro reservado</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for aluno in alunos%}
+        <tr>
+            <td>{{ aluno.ra }}</td>
+            <td>{{ aluno.nome }}</td>
+            {% if aluno.id_livro != 0 %}
+            <td>{{ aluno.id_livro }}</td>
+            <td>
+                {% if aluno.pode_reservar %}
+                <a href="{{ url_for('confirmar_reserva', ra=aluno.ra) }}">Confirmar Reserva</a>
+                {% elif not aluno.pode_reservar %}
+                <a href="{{ url_for('confirmar_retorno', ra=aluno.ra) }}">Confirmar Retorno</a>
+                {% endif %}
+            </td>
+            {% endif %}
+            {% if aluno.id_livro == 0 %}
+            <td>O aluno não tem empréstimos no momento</td>
+            {% endif %}
+        </tr>
+        </a>
+
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

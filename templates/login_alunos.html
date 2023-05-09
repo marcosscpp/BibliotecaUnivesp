@@ -1,0 +1,23 @@
+{% extends "template.html" %}
+{% block conteudo %}
+<form method="POST" action="{{ url_for('auth_user') }}">
+    <input type="hidden" name="proxima" value="{{ proxima }}">
+    {{ form.csrf_token() }}
+  <div class="formularios">
+        <h1 class="login-text">Login para Estudantes</h1>
+        <div class="grupo-form">
+            <i class="fa-solid fa-graduation-cap"></i>
+            {{ form.ra(class="campo", placeholder=" ") }}
+            {{ form.ra.label }}
+        </div>
+        <div class="grupo-form">
+            <i class="fa-solid fa-lock"></i>
+            {{ form.senha(class="campo", placeholder=" ") }}
+            {{ form.senha.label }}
+        </div>
+        <div class="btn-envio">
+            {{ form.login(class="btn-envio") }}
+        </div>
+    </div>
+</form>
+{% endblock %}

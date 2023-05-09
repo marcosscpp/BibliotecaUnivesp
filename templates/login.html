@@ -1,0 +1,24 @@
+{% extends "template.html" %}
+{% block conteudo %}
+<form method="POST" action="{{ url_for('auth_adm') }}">
+    <input type="hidden" name="proxima" value="{{ proxima }}">
+    {{ form.csrf_token() }}
+    <div class="formularios">
+        <h1 class="login-text">Login para Administradores</h1>
+        <div class="grupo-form">
+            <i class="fa-solid fa-user"></i>
+            {{ form.nome(class="campo", placeholder=" ") }}
+            {{ form.nome.label }}
+        </div>
+        <div class="grupo-form">
+            <i class="fa-solid fa-lock"></i>
+            {{ form.senha(class="campo", placeholder=" ") }}
+            {{ form.senha.label }}
+        </div>
+        <div class="btn-envio">
+            {{ form.login(class="btn-envio") }}
+        </div>
+    </div>
+
+</form>
+{% endblock %}

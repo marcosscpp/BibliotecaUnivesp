@@ -1,0 +1,303 @@
+import os
+import time
+from flask import render_template, request, redirect, session, flash, url_for, send_from_directory
+from biblioteca import application, banco_de_dados
+from models import Livros, Usuarios, Historico
+from tools import login_adm_required, login_user_required, recupera_imagem, deletar_imagem, FormularioLivro, \
+    get_dados_formulario, usuario_pode_reservar, remover_registros_antigos
+from datetime import date
+
+application.jinja_env.globals.update(recupera_imagem=recupera_imagem)
+
+
+# Renderiza página principal com a lista de livros
+@application.route("/")
+@application.route("/livros-tabela")
+def index():
+    lista = Livros.query.order_by(Livros.id)
+    print(session)
+    return render_template("lista_livros_tabela.html", livros=lista)
+
+@application.route("/livros-cards")
+def lista_card():
+    lista = Livros.query.order_by(Livros.id).paginate(per_page=9, error_out=True)
+    return render_template("lista_livros_cards.html", livros=lista)
+
+
+# Renderiza para admnistradores a lista de alunos com reservas.
+@application.route("/lista-alunos")
+@login_adm_required
+def lista_alunos():
+    lista = Usuarios.query.order_by(Usuarios.nome)
+    return render_template("lista_alunos.html", alunos=lista)
+
+
+# Renderiza página para criar um novo livro.
+@application.route("/novo")
+@login_adm_required
+def novo_livro():
+    form = FormularioLivro()
+    return render_template("novo.html", form=form)
+
+
+# URL intermediária usada no botão para criar livros
+@application.route("/criar", methods=["POST"])
+def criar():
+    form = FormularioLivro(request.form)
+
+    if not form.validate_on_submit():
+        flash("Os dados inseridos são inválidos!", category="danger")
+        return redirect(url_for("novo_livro"))
+
+    dados_formulario = get_dados_formulario(form)
+    livro = Livros.query.filter_by(id=dados_formulario["id"]).first()
+
+    if livro:
+        flash("Livro já existente!", "info")
+        return redirect(url_for("novo_livro"))
+
+    novo_livro = Livros(**dados_formulario)
+    banco_de_dados.session.add(novo_livro)
+    banco_de_dados.session.commit()
+
+    arquivo = request.files["arquivo"]
+    if arquivo.filename != "":
+        dir_path = application.config["DIR_PATH"]
+        timer = time.time()
+        arquivo.save(f"{dir_path}/capa_{novo_livro.id_bd}{timer}.jpg")
+
+    flash("Livro adicionado com sucesso!", "success")
+    return redirect(url_for("novo_livro"))
+
+
+@application.route("/logout")
+def logout():
+    session.clear()
+    flash("O usuário foi desconectado!", "success")
+    return redirect(url_for("index"))
+
+
+@application.route("/editar/<int:id>")
+@login_adm_required
+def editar(id):
+    livro = Livros.query.filter_by(id=id).first()
+    if livro is None:
+        flash("Livro não encontrado!", "success")
+        return redirect(url_for("novo_livro", id=id))
+
+    form = FormularioLivro()
+    form.id.data = livro.id
+    form.nome.data = livro.nome
+    form.categoria.data = livro.categoria
+    form.autor.data = livro.autor
+    form.descricao.data = livro.descricao
+    form.quantidade.data = livro.quantidade
+
+    capa_livro = recupera_imagem(livro.id_bd)
+    return render_template("editar.html", id=id, capa_livro=capa_livro, form=form)
+
+
+@application.route("/atualizar", methods=["POST"])
+def atualizar():
+    form = FormularioLivro(request.form)
+    if form.validate_on_submit():
+        id_antigo = request.form["codigo"]
+        livro = Livros.query.filter_by(id=id_antigo).first()
+        if livro is None:
+            flash("Livro não encontrado!", "success")
+            return redirect(url_for("novo_livro"))
+
+        novo_id = form.id.data
+        if Livros.query.filter_by(id=novo_id).first() and int(livro.id) != int(novo_id):
+            flash(f"Não é possivel utilizar o código {novo_id}.", "success")
+            return redirect(url_for("editar", id=livro.id))
+
+        livro.id = novo_id
+        livro.nome = form.nome.data
+        livro.categoria = form.categoria.data
+        livro.autor = form.autor.data
+        livro.descricao = form.descricao.data
+        livro.quantidade = form.quantidade.data
+
+        banco_de_dados.session.add(livro)
+        banco_de_dados.session.commit()
+
+        arquivo = request.files["arquivo"]
+        dir_path = application.config["DIR_PATH"]
+        if arquivo.filename != "":
+            timer = time.time()
+            deletar_imagem(livro.id_bd)
+            arquivo.save(f"{dir_path}/capa_{livro.id_bd}{timer}.jpg")
+
+        flash("Item editado com sucesso!", "success")
+    else:
+        flash(f"Não foi possivel editar o livro verifique as informações inseridas e tente novamente!", "warning")
+        return redirect(url_for("editar", id=request.form["codigo"]))
+
+    return redirect(url_for("livro_completo", id=novo_id))
+
+
+@application.route("/deletar/<int:id>")
+@login_adm_required
+def deletar(id):
+    livro = Livros.query.filter_by(id=id).first()
+    if livro is None:
+        flash("Livro não encontrado!", "danger")
+        return redirect(url_for("index"))
+
+    deletar_imagem(livro.id_bd)
+    banco_de_dados.session.delete(livro)
+    banco_de_dados.session.commit()
+
+    flash("Livro deletado com sucesso!", "success")
+
+    return redirect(url_for("index"))
+
+
+@application.route("/uploads/<nome_arquivo>")
+def imagem(nome_arquivo):
+    return send_from_directory("imagens", nome_arquivo)
+
+
+@application.route("/detalhes/<int:id>")
+def livro_completo(id):
+    livro = Livros.query.filter_by(id=id).first()
+    if livro is None:
+        flash(f"O livro com o código {id} não existe!", category="warning")
+        return redirect(url_for("index"))
+
+    capa_livro = recupera_imagem(livro.id_bd)
+    return render_template("detalhes.html", livro=livro, capa_livro=capa_livro)
+
+
+
+
+
+
+@application.route("/reservar/<int:id>")
+@login_user_required
+@usuario_pode_reservar
+def reservar_livro(id):
+    usuario_atual = Usuarios.query.filter_by(ra=session["usuario_logado"]).first()
+
+    livro = Livros.query.filter_by(id=id).first()
+
+    if livro is None:
+        flash("Livro não encontrado!", "success")
+        return redirect(url_for("index"))
+
+    if not livro.disponibilidade:
+        flash(f"O livro {livro.nome} não está disponivel!", "success")
+        return redirect(url_for("index"))
+
+    if usuario_atual.id_livro == livro.id:
+        flash(f"Você já reservou esse livro!", "success")
+        return redirect(url_for("index"))
+
+
+    if usuario_atual.id_livro == 0:
+        livro.quantidade -= 1
+        usuario_atual.id_livro = id
+    else:
+        livro_antigo = Livros.query.filter_by(id=usuario_atual.id_livro).first()
+        livro_antigo.quantidade += 1
+        livro.quantidade -= 1
+        usuario_atual.id_livro = id
+        if livro_antigo.quantidade > 0:
+            livro_antigo.disponibilidade = True
+
+    if livro.quantidade == 0:
+        livro.disponibilidade = False
+
+    banco_de_dados.session.commit()
+    flash(f"Livro {livro.nome} reservado com sucesso!", "success")
+    return redirect(url_for("index"))
+
+
+@application.route("/limpar-reserva")
+@login_user_required
+@usuario_pode_reservar
+def limpar_reserva():
+    usuario_atual = Usuarios.query.filter_by(ra=session["usuario_logado"]).first()
+
+    if usuario_atual.id_livro != 0:
+        livro = Livros.query.filter_by(id=usuario_atual.id_livro).first()
+        livro.quantidade += 1
+        if livro.quantidade > 0:
+            livro.disponibilidade = True
+        usuario_atual.id_livro = 0
+
+        banco_de_dados.session.commit()
+        flash(f"Retirando reserva para o livro {livro.nome}!", "success")
+    else:
+        flash("Você não possui reservas!", "success")
+
+    return redirect(url_for("index"))
+
+
+@application.route("/confirmar-reserva/<int:ra>")
+@login_adm_required
+def confirmar_reserva(ra):
+    usuario = Usuarios.query.filter_by(ra=ra).first()
+    if not usuario:
+        flash(f"O aluno não reservou nenhum livro", "info")
+        return redirect(url_for("lista_alunos"))
+
+    if not usuario.pode_reservar:
+        flash(f"A reserva já foi confirmada!", "info")
+        return redirect(url_for("lista_alunos"))
+
+    novo_registro = Historico(id=usuario.id_livro, ra=usuario.ra, data_saida=date.today())
+    banco_de_dados.session.add(novo_registro)
+    usuario.pode_reservar = False
+    banco_de_dados.session.commit()
+    flash(f"O {usuario.nome} reservou o livro de código {usuario.id_livro}", "info")
+    return redirect(url_for("lista_alunos"))
+
+
+@application.route("/confirmar-retorno/<int:ra>")
+@login_adm_required
+def confirmar_retorno(ra):
+    usuario = Usuarios.query.filter_by(ra=ra).first()
+    if usuario.pode_reservar:
+        flash("Primeiro é necessário confirmar a reserva", "warning")
+        return redirect(url_for("lista_alunos"))
+
+
+
+    usuario.pode_reservar = True
+    livro = Livros.query.filter_by(id=usuario.id_livro).first()
+    Historico.query.filter_by(id=usuario.id_livro).order_by(Historico.id_bd.desc()).first().data_retorno = date.today()
+    usuario.id_livro = 0
+
+    if livro is None:
+        usuario.pode_reservar = True
+        usuario.id_livro = 0
+        banco_de_dados.session.commit()
+        flash(f"O livro não existe ou foi deletado", "danger")
+        return redirect(url_for("lista_alunos"))
+
+    livro.disponibilidade = True
+    livro.quantidade += 1
+
+    banco_de_dados.session.commit()
+
+    flash(f"O {usuario.nome} devolveu o livro!", "info")
+    return redirect(url_for("lista_alunos"))
+
+
+@application.route("/historico-aluno")
+@login_user_required
+def historico_aluno():
+    ra = session['usuario_logado']
+    historico = Historico.query.filter_by(ra=ra).all()
+    msg = f"Histórico do aluno {session['nome_usuario']}"
+    return render_template("historico_aluno.html", historico=historico, msg=msg)
+
+
+@application.route("/historico-alunos")
+@login_adm_required
+def historico_todos_alunos():
+    hist = Historico.query.order_by(Historico.id_bd)
+
+    return render_template("historico_global.html", historico=hist)

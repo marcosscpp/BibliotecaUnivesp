@@ -1,0 +1,8 @@
+{% extends "template.html" %}
+{% block conteudo %}
+<p>{{ livro.nome }}</p>
+<p>{{ livro.disponibilidade }}</p>
+<p>{{ livro.categoria }}</p>
+<p>{{ livro.descricao }}</p>
+<img src="{{ url_for('imagem', nome_arquivo=capa_livro) }}">
+{% endblock %}

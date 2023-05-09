@@ -1,0 +1,29 @@
+{% extends "template.html" %}
+{% block conteudo %}
+<table class="table table-striped table-responsive table-bordered">
+
+    {% if historico != [] %}
+    <h1>{{ msg }}</h1>
+    <thead class="thead-default">
+        <tr>
+            <th>Código do livro reservado</th>
+            <th>Data de reserva</th>
+            <th>Data da devolução</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for campo in historico %}
+        {% if campo.data_retorno != None %}
+        <tr>
+            <td>{{ campo.id }}</td>
+            <td>{{ campo.data_saida.strftime('%d/%m/%Y') }}</td>
+            <td>{{ campo.data_retorno.strftime('%d/%m/%Y') }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<h1>O usuário não realizou nenhuma operação</h1>
+{% endif %}
+{% endblock %}

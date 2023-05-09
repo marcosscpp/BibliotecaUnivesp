@@ -1,0 +1,37 @@
+{% extends "template.html" %}
+{% block conteudo %}
+<form method="POST" action="{{ url_for('criar_usuario') }}">
+  <input type="hidden" name="proxima" value="{{ proxima }}">
+  {{ form.csrf_token() }}
+ <div class="cadastro">
+        <h1 class="login-text">Cadastro de Alunos</h1>
+        <div class="grupo-form">
+            <i class="fa-solid fa-user"></i>
+            {{ form.nome(class="campo",  placeholder=" ") }}
+            {{ form.nome.label }}
+        </div>
+        <div class="grupo-form">
+            <i class="fa-solid fa-envelope"></i>
+            {{ form.email(class="campo", placeholder=" ") }}
+            {{ form.email.label }}
+        </div>
+        <div class="grupo-especifico">
+        <div class="grupo-form">
+            <i class="fa-solid fa-graduation-cap"></i>
+            {{ form.ra(class="campo", placeholder=" ") }}
+            {{ form.ra.label }}
+        </div>
+        <div class="grupo-form">
+            <i class="fa-solid fa-lock"></i>
+            {{ form.senha(class="campo", placeholder=" ") }}
+            {{ form.senha.label }}
+        </div>
+            </div>
+
+
+        <div class="btn-envio">
+            {{ form.login(class="btn-envio") }}
+        </div>
+    </div>
+</form>
+{% endblock %}

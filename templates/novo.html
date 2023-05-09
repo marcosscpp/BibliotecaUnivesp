@@ -1,0 +1,51 @@
+{% extends "template.html" %}
+{% block imports %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/figure.css') }}">
+{% endblock %}
+{% block conteudo %}
+<form action="{{ url_for('criar') }}" method="post" enctype="multipart/form-data">
+
+  <figure class="img thumbnail col-md-4">
+    <img class="img-fluid" src="{{ url_for('imagem', nome_arquivo='capa_padrao.jpg') }}">
+    <figcaption>
+      <label class="fileContainer">
+        Mudar Capa
+        <input type="file" name="arquivo" accept=".jpg">
+      </label>
+    </figcaption>
+  </figure>
+
+
+  <fieldset>
+    {{ form.csrf_token() }}
+    <div class="form-group">
+      {{ form.id.label(class="form-label") }}
+      {{ form.id(class="form-control") }}
+    </div>
+    <div class="form-group">
+      {{ form.nome.label(class="form-label") }}
+      {{ form.nome(class="form-control") }}
+    </div>
+    <div class="form-group">
+      {{ form.categoria.label(class="form-label") }}
+      {{ form.categoria(class="form-control") }}
+    </div>
+    <div class="form-group">
+      {{ form.autor.label(class="form-label") }}
+      {{ form.autor(class="form-control") }}
+    </div>
+    <div class="form-group">
+      {{ form.descricao.label(class="form-label") }}
+      {{ form.descricao(class="form-control") }}
+    </div>
+    <div class="form-group">
+      {{ form.quantidade.label(class="form-label") }}
+      {{ form.quantidade(class="form-control", value=1) }}
+    </div>
+    <div>
+      {{ form.salvar(class="btn btn-primary") }}
+    </div>
+  </fieldset>
+</form>
+<a class="btn btn-danger" href="{{ url_for('index') }}">Voltar</a>
+{% endblock %}
