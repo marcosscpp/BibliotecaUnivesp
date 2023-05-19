@@ -1,0 +1,257 @@
+
+/* Tabela de livros */
+
+.page-header {
+    position: relative;
+}
+
+#tabela-livros_wrapper > .row {
+     justify-content: flex-end;
+}
+
+.botao-tabela {
+    color: white;
+    border-radius: 6px;
+    display: inline-block;
+    padding: 5px 15px;
+    position: relative;
+    text-align: center;
+    top: 30px;
+    transition: 0.4s;
+    font-weight: bold;
+}
+
+.novo-btn {
+    background-color: var(--cor-botao-novo-livro);
+    margin-left: 5px;
+    width: max-content;
+}
+
+.novo-btn:hover {
+    background-color: var(--cor-botao-novo-hover);
+    color: white;
+}
+
+.exibicao-btn {
+    background-color: var(--cor-botao-exibicao);
+    width: max-content;
+}
+
+.exibicao-btn:hover {
+    background-color: var(--cor-botao-exibicao-hover);
+    color: white;
+}
+
+.limpar-btn {
+    background-color: var(--cor-botao-limpar);
+    margin-left: 5px;
+    width: max-content;
+}
+
+.limpar-btn:hover {
+    background-color: var(--cor-botao-limpar-hover);
+    color: white;
+}
+
+.exibicao-btn i {
+    margin-right: 6px;
+}
+
+.exibicao-btn:hover > i {
+    animation: spin 4s linear infinite;
+}
+.fa-solid {
+    font-size: 18px;
+    margin: 0 2px;
+}
+
+#tabela-livros {
+    border-collapse: collapse !important;
+    font-size: 20px;
+    width: 100%;
+}
+
+#tabela-livros_filter {
+    margin-bottom: 10px;
+}
+
+.content-table {
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    font-size: 1em;
+    overflow: hidden;
+}
+
+
+.content-table thead th {
+    background-color: var(--cor-tabela);
+    color: var(--cor-cabecalho-texto);
+    font-size: 1rem;
+}
+
+.content-table th {
+    padding: 12px 15px;
+}
+
+.content-table td {
+    padding: 0 15px;
+}
+
+.odd, .even {
+    height: 12vh;
+}
+
+.even:last-of-type {
+    border-bottom: 2px solid var(--cor-tabela);
+}
+
+
+.link-livro {
+    color: black;
+    display: inline-block;
+    text-decoration: none;
+    padding: 24px 0;
+    width: 100%;
+}
+
+.status {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.content-table td {
+    color: var(--cor-texto-tabela)
+    height: 7vh;
+    text-align: center;
+}
+
+.align-middle {
+    color:red;
+}
+
+.nome {
+    width: 30vw;
+}
+
+.categoria {
+    width: 12vw;
+}
+
+.reservar {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0 auto;
+    text-align: center;
+    text-decoration: none;
+}
+
+/* Paginação */
+
+.active >.page-link {
+    background-color: var(--cor-tabela);
+    border-color: var(--cor-tabela);
+}
+
+.pagination li a{
+    color: var(--cor-tabela);
+}
+
+.row:last-of-type {
+    margin-top: 20px;
+}
+
+#tabela-livros_paginate {
+    margin-top: 1rem;
+}
+
+
+@media (max-width: 990px) {
+
+    #tabela-livros_wrapper > .row {
+     justify-content: center;
+}
+
+    input[type=search] {
+        margin: 0 !important;
+        width: 60vw !important;
+    }
+
+    #tabela-livros {
+        font-size: .9rem;
+        margin: 0 auto;
+        width: 85%;
+    }
+
+    .content-table td  {
+        padding: 5px 11px;
+        line-break: auto;
+    }
+
+    .col-sm-12 {
+        padding: 0 0;
+        width: auto;
+    }
+
+    .row {
+        justify-content: center;
+        margin: 0;
+        width: 100%;
+    }
+
+    .container {
+        padding: 0;
+    }
+
+    .botoes-funcs a {
+        font-size: .7rem;
+    }
+
+    .botoes-funcs i {
+        font-size: .9rem;
+    }
+
+    .odd, .even {
+        height: 10vh;
+        white-space: normal;
+    }
+
+    .botao-tabela {
+        padding: 8px 8px;
+        top: 0;
+    }
+
+    .botoes-adicionais {
+        display: flex;
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .limpar-btn {
+        width: max-content;
+    }
+
+    .novo-btn {
+        width: max-content;
+    }
+
+    .exibicao-btn {
+        width: max-content;
+    }
+
+}
+
+@media (min-width: 800px) {
+    #tabela-livros {
+        font-size: 1.2rem;
+    }
+
+    .botoes-funcs a {
+        font-size: .9rem;
+    }
+
+    .botoes-funcs i {
+        font-size: 1.1rem;
+    }
+}

@@ -1,5 +1,9 @@
 $(document).ready(function () {
   $("#tabela-livros").DataTable({
+    responsive: true,
+    responsive: {
+        details: false
+    },
     columns: [
       null,
       null,
@@ -27,3 +31,4 @@ $(document).ready(function () {
     targets: "_all",
   });
 });
+

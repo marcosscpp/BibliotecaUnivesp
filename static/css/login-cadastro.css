@@ -1,0 +1,100 @@
+
+/* Login */
+
+.formularios {
+    align-items: center;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    font-family: 'Open Sans', sans-serif;
+    height: 440px;
+    justify-content: center;
+    margin: 10vh auto 0 auto;
+    padding: 0 40px;
+    position: relative;
+    width: 400px;
+}
+
+.grupo-form {
+    border-bottom: 2px solid var(--cor-linha-formulario);
+    height: 50px;
+    margin: 30px 0;
+    position: relative;
+    width: 100%;
+}
+
+.login-text {
+    font-size: 140%;
+    font-weight: bold;
+    text-align: center;
+}
+
+.grupo-form i {
+    color: var(--cor-header);
+    font-size: 1.2em;
+    line-height: 55px;
+    position: absolute;
+    right: 8px;
+}
+
+.grupo-form label {
+    color: var(--cor-texto-formulario);
+    font-size: 1em;
+    font-weight: 500;
+    left: 5px;
+    position: absolute;
+    top: 60%;
+    transform: translateY(-50%);
+    transition: 0.3s;
+}
+
+.campo {
+    background: transparent;
+    border: none;
+    outline: none;
+    height: 100%;
+    width: 86%;
+}
+
+
+.campo:focus~label,
+.campo:not(:placeholder-shown)~label{
+    top: -5px;
+}
+
+.btn-envio {
+    background-color: var(--cor-botao-envio);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    height: 45px;
+    width: 100%;
+
+}
+
+.btn-envio:hover {
+     background-color: var(--cor-botao-envio-hover);
+}
+
+.cadastro {
+    align-items: center;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    justify-content: center;
+    margin: 10vh auto 0 auto;
+    padding: 0 40px;
+    position: relative;
+    width: 600px;
+}
+
+.grupo-especifico {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+}
+
