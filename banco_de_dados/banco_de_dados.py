@@ -61,17 +61,17 @@ with open("dados.json", "r") as bd_conn:
 
     cursor.execute('''INSERT INTO `administradores` (`nome`, `senha`) VALUES ('teste', 'teste');''')
 
-    cursor.execute('''INSERT INTO `livros` (`id`, `nome`, `categoria`, `autor`, `descricao`, `disponibilidade`, `quantidade`) VALUES 
-                       (1, 'O Senhor dos Anéis', 'Fantasia', 'J.R.R. Tolkien', 'Uma grande aventura épica na Terra-média', true, 1),
-                       (2, '1984', 'Ficção Científica', 'George Orwell', 'Uma história sombria sobre o controle totalitário do Estado', true, 1),
-                       (3, 'Cem Anos de Solidão', 'Ficção Literária', 'Gabriel García Márquez', 'A saga de uma família através de gerações numa aldeia imaginária na América Latina', true, 2),
-                       (4, 'A Guerra dos Tronos', 'Fantasia', 'George R.R. Martin', 'A história de várias famílias nobres lutando pelo controle do Trono de Ferro', true, 4),
-                       (5, 'A Revolução dos Bichos', 'Fábula', 'George Orwell', 'Uma história sobre animais que se revoltam contra os seus donos humanos', true, 1),
-                       (6, 'O Sol é para Todos', 'Ficção Literária', 'Harper Lee', 'Um livro sobre racismo e injustiça nos EUA dos anos 30', true, 1),
-                       (7, 'Dom Quixote', 'Romance', 'Miguel de Cervantes', 'As aventuras de um sonhador que se torna cavaleiro', true, 1),
-                       (8, 'O Apanhador no Campo de Centeio', 'Ficção Literária', 'J.D. Salinger', 'A história de um adolescente em conflito com a sociedade em que vive', true, 2),
-                       (9, 'A Montanha Mágica', 'Romance', 'Thomas Mann', 'A história de um jovem que vai a um sanatório nos Alpes suíços e se envolve em discussões filosóficas', true, 3),
-                       (10, 'A Insustentável Leveza do Ser', 'Ficção Literária', 'Milan Kundera', 'Um romance filosófico sobre amor, sexo, política e a vida em geral', true, 2);
+    cursor.execute('''INSERT INTO `livros` (`id_bd`, `id`, `nome`, `categoria`, `autor`, `descricao`, `disponibilidade`, `quantidade`) VALUES 
+                       (1, 1, 'O Senhor dos Anéis', 'Fantasia', 'J.R.R. Tolkien', 'Uma grande aventura épica na Terra-média', true, 1),
+                       (2, 2, '1984', 'Ficção Científica', 'George Orwell', 'Uma história sombria sobre o controle totalitário do Estado', true, 1),
+                       (3, 3, 'Cem Anos de Solidão', 'Ficção Literária', 'Gabriel García Márquez', 'A saga de uma família através de gerações numa aldeia imaginária na América Latina', true, 2),
+                       (4, 4, 'A Guerra dos Tronos', 'Fantasia', 'George R.R. Martin', 'A história de várias famílias nobres lutando pelo controle do Trono de Ferro', true, 4),
+                       (5, 5, 'A Revolução dos Bichos', 'Fábula', 'George Orwell', 'Uma história sobre animais que se revoltam contra os seus donos humanos', true, 1),
+                       (6, 6, 'O Sol é para Todos', 'Ficção Literária', 'Harper Lee', 'Um livro sobre racismo e injustiça nos EUA dos anos 30', true, 1),
+                       (7, 7, 'Dom Quixote', 'Romance', 'Miguel de Cervantes', 'As aventuras de um sonhador que se torna cavaleiro', true, 1),
+                       (8, 8, 'O Apanhador no Campo de Centeio', 'Ficção Literária', 'J.D. Salinger', 'A história de um adolescente em conflito com a sociedade em que vive', true, 2),
+                       (9, 9, 'A Montanha Mágica', 'Romance', 'Thomas Mann', 'A história de um jovem que vai a um sanatório nos Alpes suíços e se envolve em discussões filosóficas', true, 3),
+                       (10, 10, 'A Insustentável Leveza do Ser', 'Ficção Literária', 'Milan Kundera', 'Um romance filosófico sobre amor, sexo, política e a vida em geral', true, 2);
                        ''')
 
     conn.commit()

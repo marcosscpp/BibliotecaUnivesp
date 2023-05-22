@@ -6,35 +6,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Biblioteca Univesp - Polo Itapevi</title>
   {% block imports %} {% endblock %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
   <script src="https://kit.fontawesome.com/c6d6aa1dd7.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
   <header class="menu">
-    <img class="menu__logo" src="/static/img/logo_univesp.png">
-    <nav class="menu__nav">
-      <ul class="menu__nav-list">
-        <li class="menu__nav-item"><a class="menu__nav-link" href="#">Home</a></li>
-        <li class="menu__nav-item"><a class="menu__nav-link" href="{{ url_for('index') }}">Catálogo</a></li>
-        <li class="menu__nav-item"><a class="menu__nav-link" href="{{ url_for('cadastro_alunos') }}">Cadastro</a></li>
-      </ul>
-      {% if session.get("usuario_logado") %}
-      <a class="user-link" href="{{ url_for('historico_aluno') }}">
-        <div class="user">
-          <i class="fa-solid fa-user"></i>
-          <span>{{ session.get("nome_usuario").split()[0] }}</span>
+    <nav class="menu__nav navbar navbar-expand-lg bg-body-tertiary">
+      <div class="menu__left">
+        <button class="nav-bar-button navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <div class="container-toggler" onclick="TogglerAnim(this)">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+          </div>
+        </button>
+        <a class="navbar-brand" href="#"><img class="menu__logo" src="/static/img/logo_univesp.png"></a>
+      </div>
+
+
+      <div class="menu__buttons">
+        {% if session.get("usuario_logado") %}
+        <div class="dropdown">
+          <a class="user-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <div class="user">
+            <i class="fa-solid fa-user"></i>
+            <span>{{ session.get("nome_usuario").split()[0] }}</span>
+          </div>
+          </a>
+           <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="{{ url_for('historico_aluno') }}">Histórico do Aluno</a></li>
+          <li class="dropdown-item">{{ get_datas(session.get("usuario_logado")) }}</li>
+        </ul>
         </div>
-      </a>
-      <a class="special-item" href="{{ url_for('logout') }}">Logout</a>
-      {% elif session.get("admnistrador_logado") %}
-      <div class="user"><i class="fa-solid fa-user"></i> {{ session.get("admnistrador_logado").split()[0] }}</div>
-      <a class="special-item" href="{{ url_for('logout') }}">Logout</a>
-      {% else %}
-      <a  class="special-item" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
-      {% endif %}
+        <a class="special-item" href="{{ url_for('logout') }}">Logout</a>
+
+        {% elif session.get("admnistrador_logado") %}
+        <div class="dropdown">
+          <a class="user-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <div class="user">
+            <i class="fa-solid fa-user"></i>
+            <span>{{ session.get("admnistrador_logado").split()[0] }}</span>
+          </div>
+          </a>
+           <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Histórico Completo</a></li>
+          <li><a class="dropdown-item" href="#"></a></li>
+        </ul>
+        </div>
+        <a class="special-item" href="{{ url_for('logout') }}">Logout</a>
+
+        {% else %}
+        <a class="special-item" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+        {% endif %}
+
+      </div>
+
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="menu__nav-list navbar-nav">
+          <li class="menu__nav-item nav-item"><a class="menu__nav-link" href="{{ url_for('home') }}">Home</a></li>
+          <li class="menu__nav-item nav-item"><a class="menu__nav-link" href="{{ url_for('index') }}">Catálogo</a></li>
+          <li class="menu__nav-item nav-item"><a class="menu__nav-link" href="{{ url_for('cadastro_alunos') }}">Cadastro</a></li>
+        </ul>
+      </div>
+
+
+
+
     </nav>
+
   </header>
 
   <div class="container">
@@ -42,31 +84,31 @@
     {% if messages %}
     <ul id="messages" class="list-unstyled">
       {% for category, message in messages %}
-      <li class="alert alert-{{ category }}">{{ message }}</li>
+      <li class="alert alert-{{ category }} mensagem">{{ message }}</li>
       {% endfor %}
     </ul>
     {% endif %}
     {% endwith %}
 
     <div class="page-header">
+      {% block conteudo %} {% endblock %}
     </div>
-    {% block conteudo %} {% endblock %}
   </div>
+  {% block conteudospecial %} {% endblock %}
   <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="loginModalLabel">Selecione o tipo de login</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">Selecione o tipo de login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <a class="envio-modal" href="{{ url_for('login_alunos') }}">Aluno <i class="fa-solid fa-graduation-cap"></i></a>
+          <a class="envio-modal" href="{{ url_for('login_adm') }}">Administrador <i class="fa-solid fa-user"></i></a>
+        </div>
       </div>
-      <div class="modal-body">
-        <a class="envio-modal" href="{{ url_for('login_alunos') }}">Aluno <i class="fa-solid fa-graduation-cap"></i></a>
-        <a class="envio-modal" href="{{ url_for('login_adm') }}">Administrador <i class="fa-solid fa-user"></i></a>
-      </div>
-    
     </div>
   </div>
-</div>
 
   <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='jquery.js') }}"></script>
   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
@@ -75,6 +117,24 @@
   <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='app.js') }}"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   {% block script %} {% endblock %}
+  <script>
+    function TogglerAnim(x) {
+      x.classList.toggle("change");
+    }
+  </script>
+
+<footer>
+  <img class="rodape__logo" src="/static/img/logo_rodape.png">
+  <div class="rodape__icons">
+    <a href="https://www.facebook.com/univespoficial/"><i class="fa-brands fa-facebook-f"></i></a>
+    <a href="https://youtube.com/@univesptv"><i class="fa-brands fa-youtube"></i></a>
+    <a href="https://www.instagram.com/univespoficial/"><i class="fa-brands fa-instagram"></i></a>
+    <a href="https://twitter.com/univespoficial"><i class="fa-brands fa-twitter"></i></a>
+  </div>
+  <p class="rodape__texto">Desenvolvido por
+    <a class="rodape__link" href="https://www.linkedin.com/in/marcosscpp/">Marcos Paulo</a>
+    durante o projeto integrador da <a class="rodape__link" href="https://univesp.br/">Univesp</a></p>
+</footer>
 
 </body>
 

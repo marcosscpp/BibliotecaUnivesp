@@ -1,8 +1,37 @@
 {% extends "template.html" %}
-{% block conteudo %}
-<p>{{ livro.nome }}</p>
-<p>{{ livro.disponibilidade }}</p>
-<p>{{ livro.categoria }}</p>
+{% block conteudospecial %}
+<div class="detalhes-livros">
+    <img class="detalhes-img" src="{{ url_for('imagem', nome_arquivo=capa_livro) }}">
+    <div class="livros-dados">
+<div class="detalhes-top">
+<h1 class="titulo-livro">{{ livro.nome }}</h1>
+<p>{{ livro.autor }}</p>
+<div class="detalhes-info">
+{% if livro.disponibilidade %}<p class="disponivel">Disponível</p>{% else %}<p class="indisponivel">! Indisponível</p>{% endif %}
+<p>Categoria: {{ livro.categoria }}</p>
+    </div>
+    <div class="buttons-detalhes">
+    {% if session.get("admnistrador_logado") %}
+                <a href="{{ url_for('editar', id=livro.id) }}" class="editar"><i class="fa-solid fa-square-pen" style="color: #213454;"></i>Editar</a>
+                <a href="{{ url_for('deletar', id=livro.id)}}" class="remover"><i class="fa-solid fa-trash" style="color: #d1001f;"></i>Remover</a>
+                {% endif %}
+                {% if session.get("usuario_logado") and livro.disponibilidade %}
+                <a href="{{ url_for('reservar_livro', id=livro.id) }}" class="reservar">Reservar <i class="fa-solid fa-book"></i></a>
+                {% endif %}
+                {% if session.get("usuario_logado") and not livro.disponibilidade %}<i class="fa-solid fa-bookmark"></i>{% endif %}
+    </div>
+    </div>
+        <div class="detalhes-share">
+            <p class="detalhes-share-texto">Compartilhe esse livro</p>
+            <a class="detalhes-icon" href="https://www.facebook.com/sharer/sharer.php?u={{ url }}"><i class="fab fa-facebook-f"></i></a>
+              <a class="detalhes-icon" href="https://twitter.com/intent/tweet?url=https%3A%2F%2F{{ url }}"><i class="fab fa-twitter"></i></a>
+              <a class="detalhes-icon" href="https://api.whatsapp.com/send?text=Texto%20de%20exemplo%20aqui%20https%3A%2F%2F{{ url }}"><i class="fab fa-whatsapp"></i></a>
+              <a class="detalhes-icon" href="https://www.instagram.com/share?url=https%3A%2F%2F{{ url }}"><i class="fab fa-instagram"></i></a>
+        </div>
+        </div>
+    </div>
+<div class="descricao">
+<h3 class="descricao-titulo">Descrição</h3>
 <p>{{ livro.descricao }}</p>
-<img src="{{ url_for('imagem', nome_arquivo=capa_livro) }}">
+</div>
 {% endblock %}

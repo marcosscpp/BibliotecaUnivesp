@@ -19,7 +19,6 @@
     color: var(--cor-link-menu);
 }
 
-
 .menu__logo {
   margin-left: 3rem;
   max-width: 3.5rem;
@@ -244,14 +243,11 @@
 
   .menu__nav-link {
    display: inline-block;
-   margin: -100vw;
-   padding: 10px 100vw;
-  position: relative;
-  }
-
-  .menu__nav-item {
-    margin: 0 auto;
-    padding: 10px 0;
+   margin: 0;
+   padding: 16px 0;
+   position: relative;
+   text-align: center;
+   width: 100%;
   }
 
   .menu__nav-link:active, .menu__nav-link:hover {

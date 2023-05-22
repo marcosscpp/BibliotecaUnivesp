@@ -1,0 +1,29 @@
+{% extends "template.html" %}
+{% block conteudo %}
+{% for livro in lista_livros %}
+{% set capa_livro = recupera_imagem(livro.id_bd) %}
+  <div class="card-livro">
+    <div class="card-top">
+      <a href="{{ url_for('livro_completo', id=livro.id) }}">
+        <p class="card-id">{{ livro.id }}</p>
+        <img class="card-image" src="{{ url_for('imagem', nome_arquivo=capa_livro) }}">
+      </a>
+    </div>
+    <div class="card-data">
+      <p {% if livro.disponibilidade %} class="text-success status status--sucess"> Disponível
+        {% else %}class="text-danger status status--danger">Indisponível{% endif %}
+      </p>
+      {% if session.get("admnistrador_logado") or session.get("usuario_logado") %}
+      <div class="card-icon">
+        {% if session.get("admnistrador_logado") %}
+        <a href="{{ url_for('editar', id=livro.id) }}"><i class="fa-solid fa-square-pen" style="color: #213454;"></i></a>
+        <a href="{{ url_for('deletar', id=livro.id)}}"><i class="fa-solid fa-trash" style="color: #d1001f;"></i></a>
+        {% elif session.get("usuario_logado") and livro.disponibilidade %}
+        <a href="{{ url_for('reservar_livro', id=livro.id) }}" class="reservar">Reservar <i class="fa-solid fa-book"></i></a>
+        {% elif session.get("usuario_logado") and not livro.disponibilidade %}<i class="fa-solid fa-bookmark"></i>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}
+{% endblock %}

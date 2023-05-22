@@ -3,6 +3,10 @@ from biblioteca import application, banco_de_dados
 from models import Usuarios, Administradores
 from tools import login_adm_required, FormularioAdministrador
 from tools import FormularioCadastroUsuarios
+from flask_bcrypt import generate_password_hash
+from envia_emails import send_email
+import threading
+
 
 # Renderização da página de login do administrador
 @application.route("/login-adm")
@@ -45,19 +49,30 @@ def cadastro_alunos():
 def criar_usuario():
     form = FormularioCadastroUsuarios(request.form)
     if not form.validate_on_submit():
-        flash("Não foi possível criar um cadastro verifique as informações inseridas e tente novamente.")
+        flash("Não foi possível criar um cadastro verifique as informações inseridas e tente novamente.", "danger")
         return redirect(url_for("cadastro_alunos"))
-
-    nome = form.nome.data
-    email = form.email.data
     ra = form.ra.data
-    senha = form.senha.data
-
     aluno = Usuarios.query.filter_by(ra=ra).first()
 
     if aluno:
         flash("Usuário já existente!", "info")
         return redirect(url_for("cadastro_alunos"))
+
+    nome = form.nome.data
+    email = form.email.data
+    senha = generate_password_hash(form.senha.data)
+
+    send_email("<div style='width: 750px;'><img src='cid:image1' width='100%' alt='Logo da Faculdade'></div>"
+                f"<p>Prezado(a) <b>{nome.upper()}</b>,</p>"
+                "<p>Sua conta na biblioteca da Faculdade Univesp no polo de Itapevi foi criada com sucesso! Damos as boas-vindas como nosso novo membro!</p>"
+                "<p>Estamos muito satisfeitos em tê-lo como parte da nossa comunidade acadêmica e queremos garantir que você aproveite ao máximo todos os recursos disponíveis em nossa biblioteca. Temos um acervo diversificado de livros e materiais acadêmicos para auxiliar em seus estudos. Sinta-se à vontade para explorar nosso acervo!</p>"
+                f"<p><b>Registro Acadêmico:</b> {ra}</p>"
+                f"<p><b>Senha:</b> <i>{form.senha.data}</i></p><hr>"
+                "<p>Atenciosamente,<br><b>Biblioteca Univesp</b></p><br>"
+                "<div style='width: 750px;'><img src='cid:image2' width='100%' alt='Assinatura da Faculdade'></div>",
+               email, "Bem-vindo à Biblioteca Univesp!",
+               "static/img/univesp_email.jpg",
+               "static/img/univesp_email2.jpg")
 
     novo_aluno = Usuarios(nome=nome, email=email, ra=ra, senha=senha)
     banco_de_dados.session.add(novo_aluno)

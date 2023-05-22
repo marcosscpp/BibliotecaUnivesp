@@ -1,97 +1,99 @@
 {% extends "template.html" %}
 {% block imports %}
 <style>
-    .container {
-        margin: 0 !important;
-        max-width: 100% !important;
-        padding: 0 !important;
-    }
+  .container {
+    margin: 0 !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
 </style>
 
 {% endblock %}
 {% block conteudo %}
 
 <div class="loader-wrapper">
-    <div class="loader"></div>
+  <div class="loader"></div>
 </div>
 
-
-
 <div class="card-container">
-    <div class="btn-group">
+
+  <div class="btn-group">
+    <a class="botao-tabela exibicao-btn" href="{{ url_for('index') }}"><i class="fa-solid fa-rotate"></i>Mudar Exibição dos Livros</a>
     {% if session.get("admnistrador_logado") %}
     <a class="botao-tabela novo-btn" href="{{ url_for('novo_livro') }}"><i class="fa-sharp fa-regular fa-plus"></i> Novo Livro</a>
     {% endif %}
-    <a class="botao-tabela exibicao-btn" href="{{ url_for('index') }}"><i class="fa-solid fa-rotate"></i>Mudar Exibição dos Livros</a>
-</div>
-{% for livro in livros %}
-{% set capa_livro = recupera_imagem(livro.id_bd) %}
-<a href="{{ url_for('livro_completo', id=livro.id) }}">
-<div class="card-livro">
+    {% if session.get("usuario_logado") %}
+    <a class="botao-tabela limpar-btn" href="{{ url_for('limpar_reserva') }}">Tirar reserva</a>
+    {% endif %}
+  </div>
+  {% for livro in livros %}
+  {% set capa_livro = recupera_imagem(livro.id_bd) %}
+  <div class="card-livro">
     <div class="card-top">
-    <p class="card-id">{{ livro.id }}</p>
-    <img class="card-image" src="{{ url_for('imagem', nome_arquivo=capa_livro) }}">
-        </div>
+      <a href="{{ url_for('livro_completo', id=livro.id) }}">
+        <p class="card-id">{{ livro.id }}</p>
+        <img class="card-image" src="{{ url_for('imagem', nome_arquivo=capa_livro) }}">
+      </a>
+    </div>
     <div class="card-data">
-    <p {% if livro.disponibilidade %} class="text-success status status--sucess"> Disponível
+      <p {% if livro.disponibilidade %} class="text-success status status--sucess"> Disponível
         {% else %}class="text-danger status status--danger">Indisponível{% endif %}
-    </p>
-    <div class="card-icon">
-    {% if session.get("admnistrador_logado") %}
-    <a href="{{ url_for('editar', id=livro.id) }}"><i class="fa-solid fa-square-pen" style="color: #213454;"></i></a>
-    <a href="{{ url_for('deletar', id=livro.id)}}"><i class="fa-solid fa-trash" style="color: #d1001f;"></i></a>
-    {% endif %}
-    {% if session.get("usuario_logado") and livro.disponibilidade %}
-    <a href="{{ url_for('reservar_livro', id=livro.id) }}" class="reservar">Reservar <i class="fa-solid fa-book"></i></a>
-    {% endif %}
-    {% if session.get("usuario_logado") and not livro.disponibilidade %}<i class="fa-solid fa-bookmark"></i>{% endif %}
+      </p>
+      {% if session.get("admnistrador_logado") or session.get("usuario_logado") %}
+      <div class="card-icon">
+        {% if session.get("admnistrador_logado") %}
+        <a href="{{ url_for('editar', id=livro.id) }}"><i class="fa-solid fa-square-pen" style="color: #213454;"></i></a>
+        <a href="{{ url_for('deletar', id=livro.id)}}"><i class="fa-solid fa-trash" style="color: #d1001f;"></i></a>
+        {% elif session.get("usuario_logado") and livro.disponibilidade %}
+        <a href="{{ url_for('reservar_livro', id=livro.id) }}" class="reservar">Reservar <i class="fa-solid fa-book"></i></a>
+        {% elif session.get("usuario_logado") and not livro.disponibilidade %}<i class="fa-solid fa-bookmark"></i>{% endif %}
+      </div>
+      {% endif %}
     </div>
-    </div>
-</div>
-</a>
-{% endfor %}
+  </div>
+  {% endfor %}
 </div>
 
 <!-- Barra de navegação -->
 <nav aria-label="Navegação">
-    <ul class="pagination justify-content-center">
-      {% if livros.has_prev %}
-      <li class="page-item">
-        <a class="page-link" href="{{ url_for('lista_card', page=livros.prev_num) }}">&laquo; Anterior</a>
-      </li>
-      {% else %}
-      <li class="page-item disabled">
-        <span class="page-link">&laquo; Anterior</span>
-      </li>
-      {% endif %}
-      {% for page in livros.iter_pages() %}
-      {% if page %}
-      {% if livros.page == page %}
-      <li class="page-item active">
-        <span class="page-link">{{ page }}</span>
-      </li>
-      {% else %}
-      <li class="page-item">
-        <a class="page-link" href="{{ url_for('lista_card', page=page) }}">{{ page }}</a>
-      </li>
-      {% endif %}
-      {% else %}
-      <li class="page-item disabled">
-        <span class="page-link">...</span>
-      </li>
-      {% endif %}
-      {% endfor %}
-      {% if livros.has_next %}
-      <li class="page-item">
-        <a class="page-link" href="{{ url_for('lista_card', page=livros.next_num) }}">Próximo &raquo;</a>
-      </li>
-      {% else %}
-      <li class="page-item disabled">
-        <span class="page-link">Próximo &raquo;</span>
-      </li>
-      {% endif %}
-    </ul>
-  </nav>
+  <ul class="pagination justify-content-center">
+    {% if livros.has_prev %}
+    <li class="page-item">
+      <a class="page-link" href="{{ url_for('lista_card', page=livros.prev_num) }}">&laquo; Anterior</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <span class="page-link">&laquo; Anterior</span>
+    </li>
+    {% endif %}
+    {% for page in livros.iter_pages() %}
+    {% if page %}
+    {% if livros.page == page %}
+    <li class="page-item active">
+      <span class="page-link">{{ page }}</span>
+    </li>
+    {% else %}
+    <li class="page-item">
+      <a class="page-link" href="{{ url_for('lista_card', page=page) }}">{{ page }}</a>
+    </li>
+    {% endif %}
+    {% else %}
+    <li class="page-item disabled">
+      <span class="page-link">...</span>
+    </li>
+    {% endif %}
+    {% endfor %}
+    {% if livros.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="{{ url_for('lista_card', page=livros.next_num) }}">Próximo &raquo;</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <span class="page-link">Próximo &raquo;</span>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
 
 {% endblock %}
 
@@ -100,10 +102,12 @@
 <script type="text/javascript" src="{{ url_for('static', filename='loading.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='vanilla-tilt.js') }}"></script>
 <script>
+  if (window.screen.width > 780) {
     VanillaTilt.init(document.querySelectorAll(".card-livro"), {
-		max: 25,
-		speed: 400,
-		scale: 1.04,
-	});
+      max: 25,
+      speed: 400,
+      scale: 1.04,
+    });
+  }
 </script>
 {% endblock %}

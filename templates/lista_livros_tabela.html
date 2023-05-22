@@ -3,6 +3,7 @@
 {% block imports %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
 {% endblock %}
 {% block conteudo %}
 
@@ -10,37 +11,37 @@
     <div class="loader"></div>
 </div>
 
-{% if session.get("admnistrador_logado") %}
-<a class="botao-tabela novo-btn" href="{{ url_for('novo_livro') }}"><i class="fa-sharp fa-regular fa-plus"></i> Novo Livro</a>
+<div class="botoes-adicionais">
+    <a class="botao-tabela exibicao-btn" href="{{ url_for('lista_card') }}"><i class="fa-solid fa-rotate"></i>Mudar Exibição dos Livros</a>
+    {% if session.get("admnistrador_logado") %}
+    <a class="botao-tabela novo-btn" href="{{ url_for('novo_livro') }}"><i class="fa-sharp fa-regular fa-plus"></i> Novo Livro</a>
+    {% endif %}
+    {% if session.get("usuario_logado") %}
+    <a class="botao-tabela limpar-btn" href="{{ url_for('limpar_reserva') }}">Tirar reserva</a>
 {% endif %}
-<a class="botao-tabela exibicao-btn" href="{{ url_for('lista_card') }}"><i class="fa-solid fa-rotate"></i>Mudar Exibição dos Livros</a>
-
-
-{% if session.get("usuario_logado") %}
-<a href="{{ url_for('limpar_reserva') }}">Tirar reserva</a>
-{% endif %}
-
-<table id="tabela-livros" class="table table-sm table-striped table-responsive content-table">
+</div>
+<div class="tabel">
+<table id="tabela-livros" class="table table-sm table-striped table-responsive content-table display responsive nowrap">
     <thead class="thead-default">
         <tr>
-            <th class="codigo">ID</th>
-            <th class="nome">Nome</th>
-            <th class="categoria">Categoria</th>
-            <th>Disponibilidade</th>
-            <th></th>
+            <th class="codigo" data-priority="10001">ID</th>
+            <th class="nome" data-priority="1">Nome</th>
+            <th class="categoria" data-priority="3">Categoria</th>
+            <th data-priority="10000">Disponibilidade</th>
+            <th data-priority="2"></th>
         </tr>
     </thead>
     <tbody>
         {% for livro in livros %}
         <tr>
             <td class="align-middle">{{ livro.id }}</td>
-            <td class="align-middle">{{ livro.quantidade }} -- {{ livro.nome }}</td>
-            <td class="align-middle">{{ livro.categoria }}</td>
+            <td class="align-middle" style="white-space:normal;"><a class="link-livro" href="{{ url_for('livro_completo', id=livro.id) }}"> {{ livro.nome }} </a></td>
+            <td class="align-middle" style="white-space:normal;">{{ livro.categoria }}</td>
             <td {% if livro.disponibilidade %} class="text-success align-middle" {% else %}class="text-danger align-middle" {% endif %}>
                 {% if livro.disponibilidade %}<p class="status status--sucess">Disponível</p>{% else %}<p class="status status--danger">Indisponível</p>{% endif %}
             </td>
 
-            <td class="align-middle">
+            <td class="align-middle botoes-funcs">
                 {% if session.get("admnistrador_logado") %}
                 <a href="{{ url_for('editar', id=livro.id) }}"><i class="fa-solid fa-square-pen" style="color: #213454;"></i></a>
                 <a href="{{ url_for('deletar', id=livro.id)}}"><i class="fa-solid fa-trash" style="color: #d1001f;"></i></a>
@@ -56,9 +57,12 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
 {% endblock %}
 
 {% block script %}
 <script src="{{ url_for('static', filename='datatable.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='loading.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='search.js') }}"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
 {% endblock %}

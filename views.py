@@ -1,21 +1,28 @@
-import os
+import threading
 import time
 from flask import render_template, request, redirect, session, flash, url_for, send_from_directory
 from biblioteca import application, banco_de_dados
+from envia_emails import send_email
 from models import Livros, Usuarios, Historico
 from tools import login_adm_required, login_user_required, recupera_imagem, deletar_imagem, FormularioLivro, \
-    get_dados_formulario, usuario_pode_reservar, remover_registros_antigos
-from datetime import date
+    get_dados_formulario, usuario_pode_reservar, get_datas, agendar_remocao_de_registros
+from datetime import date, timedelta
 
 application.jinja_env.globals.update(recupera_imagem=recupera_imagem)
+application.jinja_env.globals.update(get_datas=get_datas)
 
+
+@application.route("/")
+@application.route("/home")
+def home():
+    lista_livros = Livros.query.order_by(Livros.id_bd.desc()).limit(3)
+    return render_template("home.html", lista_livros=lista_livros)
 
 # Renderiza página principal com a lista de livros
-@application.route("/")
 @application.route("/livros-tabela")
 def index():
+    agendar_remocao_de_registros()
     lista = Livros.query.order_by(Livros.id)
-    print(session)
     return render_template("lista_livros_tabela.html", livros=lista)
 
 @application.route("/livros-cards")
@@ -55,7 +62,6 @@ def criar():
     if livro:
         flash("Livro já existente!", "info")
         return redirect(url_for("novo_livro"))
-
     novo_livro = Livros(**dados_formulario)
     banco_de_dados.session.add(novo_livro)
     banco_de_dados.session.commit()
@@ -64,7 +70,7 @@ def criar():
     if arquivo.filename != "":
         dir_path = application.config["DIR_PATH"]
         timer = time.time()
-        arquivo.save(f"{dir_path}/capa_{novo_livro.id_bd}{timer}.jpg")
+        arquivo.save(f"{dir_path}/capa_{novo_livro.id_bd}-{timer}.jpg")
 
     flash("Livro adicionado com sucesso!", "success")
     return redirect(url_for("novo_livro"))
@@ -127,7 +133,7 @@ def atualizar():
         if arquivo.filename != "":
             timer = time.time()
             deletar_imagem(livro.id_bd)
-            arquivo.save(f"{dir_path}/capa_{livro.id_bd}{timer}.jpg")
+            arquivo.save(f"{dir_path}/capa_{livro.id_bd}-{timer}.jpg")
 
         flash("Item editado com sucesso!", "success")
     else:
@@ -165,13 +171,9 @@ def livro_completo(id):
     if livro is None:
         flash(f"O livro com o código {id} não existe!", category="warning")
         return redirect(url_for("index"))
-
+    url = request.base_url
     capa_livro = recupera_imagem(livro.id_bd)
-    return render_template("detalhes.html", livro=livro, capa_livro=capa_livro)
-
-
-
-
+    return render_template("detalhes.html", livro=livro, capa_livro=capa_livro, url=url)
 
 
 @application.route("/reservar/<int:id>")
@@ -239,7 +241,7 @@ def limpar_reserva():
 @login_adm_required
 def confirmar_reserva(ra):
     usuario = Usuarios.query.filter_by(ra=ra).first()
-    if not usuario:
+    if not usuario or usuario.id_livro == 0:
         flash(f"O aluno não reservou nenhum livro", "info")
         return redirect(url_for("lista_alunos"))
 
@@ -247,13 +249,31 @@ def confirmar_reserva(ra):
         flash(f"A reserva já foi confirmada!", "info")
         return redirect(url_for("lista_alunos"))
 
+    livro = Livros.query.filter_by(id=usuario.id_livro).first()
+
+    thread = threading.Thread(target=lambda: send_email((
+        "<div style='width: 100%;'><img src='cid:image1' width='100%' alt='Logo da Biblioteca'></div>"
+        "<hr>"
+        f"<h2 style='text-align: center; color: black;'>Livro Alugado com Sucesso</h2>"
+        f"<h2 style='text-align: center; color: black;'>{livro.nome}</h2>"
+        f"<h3 style='text-align: center;  color: black;'>Código do livro: {usuario.id_livro}</h3>"
+        "<p style='text-align: center;  color: black;'><img src='cid:image3' width='300px' alt='Imagem do livro'></p><hr>"
+        f"<p style='color: black;'><b>Data de saída:</b> {date.today().strftime('%d/%m/%Y')}</p>"
+        f"<p style='color: black;'><b>Prazo de devolução máximo:</b> {(date.today() + timedelta(days=15)).strftime('%d/%m/%Y')}</p>"
+        "<div style='width: 100%;'><img src='cid:image2' width='100%' alt='Assinatura da Biblioteca'></div>"),
+        usuario.email, "Livro Alugado com Sucesso!", "static/img/univesp_email.jpg", "static/img/univesp_email2.jpg",
+        f"imagens/{recupera_imagem(livro.id_bd)}"))
+    thread.start()
+
+
     novo_registro = Historico(id=usuario.id_livro, ra=usuario.ra, data_saida=date.today())
     banco_de_dados.session.add(novo_registro)
     usuario.pode_reservar = False
     banco_de_dados.session.commit()
-    flash(f"O {usuario.nome} reservou o livro de código {usuario.id_livro}", "info")
-    return redirect(url_for("lista_alunos"))
 
+    flash(f"O {usuario.nome} reservou o livro de código {usuario.id_livro}", "info")
+    thread.join()
+    return redirect(url_for("lista_alunos"))
 
 @application.route("/confirmar-retorno/<int:ra>")
 @login_adm_required
@@ -262,8 +282,6 @@ def confirmar_retorno(ra):
     if usuario.pode_reservar:
         flash("Primeiro é necessário confirmar a reserva", "warning")
         return redirect(url_for("lista_alunos"))
-
-
 
     usuario.pode_reservar = True
     livro = Livros.query.filter_by(id=usuario.id_livro).first()
@@ -286,6 +304,7 @@ def confirmar_retorno(ra):
     return redirect(url_for("lista_alunos"))
 
 
+
 @application.route("/historico-aluno")
 @login_user_required
 def historico_aluno():
@@ -294,10 +313,8 @@ def historico_aluno():
     msg = f"Histórico do aluno {session['nome_usuario']}"
     return render_template("historico_aluno.html", historico=historico, msg=msg)
 
-
 @application.route("/historico-alunos")
 @login_adm_required
 def historico_todos_alunos():
     hist = Historico.query.order_by(Historico.id_bd)
-
     return render_template("historico_global.html", historico=hist)

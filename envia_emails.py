@@ -24,5 +24,5 @@ def send_email(conteudo, remetente, assunto, *args):
 
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-        server.login(email_msg["From"], os.getenv("emailpass"))
+        server.login(email_msg["From"], "eumbinyywrriqvnm")
         server.send_message(email_msg)

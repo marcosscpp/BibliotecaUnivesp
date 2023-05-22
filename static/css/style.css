@@ -4,6 +4,7 @@
 @import url("tabela.css");
 @import url("login-cadastro.css");
 @import url("rodape.css");
+@import url("detalhes.css");
 
 :root {
     --cor-header: #2C3333;
@@ -27,6 +28,7 @@
     --cor-botao-exibicao-hover: #00BCD4;
     --cor-botao-limpar: #F44336;
     --cor-botao-limpar-hover: #E63022;
+    --cor-detalhes: #AC1C14;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -103,3 +105,4 @@ body {
 .mensagem {
     margin: 0 5vw;
 }
+
