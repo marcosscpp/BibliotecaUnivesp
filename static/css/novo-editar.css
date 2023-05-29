@@ -1,0 +1,23 @@
+figure {
+    margin: 0 auto 30px auto;
+}
+
+figcaption {
+    background-color: var(--cor-mudar-capa);
+    border-radius: 0 0 5px 5px;
+    color: white;
+    display: flex;
+    font-weight: bold;
+    justify-content: center;
+    margin: 0;
+    padding: 3px 0;
+}
+
+.form-wrapper {
+    padding: 0 20px;
+}
+
+.botao-salvar:after {
+    content: "bolsodoria";
+}
+
