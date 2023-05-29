@@ -5,6 +5,13 @@
     position: relative;
 }
 
+.tabela-wrap {
+    border-radius: 5px 5px 0 0;
+    margin: 0 auto;
+    overflow-x: auto;
+    width: 90%;
+}
+
 #tabela-livros_wrapper > .row {
      justify-content: flex-end;
 }
@@ -65,7 +72,7 @@
     margin: 0 2px;
 }
 
-#tabela-livros {
+#tabela-livros, #tabela-alunos, .tabela-historico {
     border-collapse: collapse !important;
     font-size: 20px;
     width: 100%;
@@ -97,7 +104,7 @@
     padding: 0 15px;
 }
 
-.odd, .even {
+.odd, .even, tbody td {
     height: 12vh;
 }
 
@@ -147,6 +154,10 @@
     text-decoration: none;
 }
 
+td {
+    vertical-align: middle;
+}
+
 /* Paginação */
 
 .active >.page-link {
@@ -173,21 +184,22 @@
      justify-content: center;
 }
 
+.content-table thead th {
+    font-size: .8rem;
+}
+
     input[type=search] {
         margin: 0 !important;
         width: 60vw !important;
     }
 
-    #tabela-livros {
+    #tabela-livros, #tabela-alunos, .tabela-historico {
         font-size: .9rem;
         margin: 0 auto;
         width: 85%;
     }
 
-    .content-table td  {
-        padding: 5px 11px;
-        line-break: auto;
-    }
+
 
     .col-sm-12 {
         padding: 0 0;
@@ -212,7 +224,7 @@
         font-size: .9rem;
     }
 
-    .odd, .even {
+    .odd, .even, tbody td {
         height: 10vh;
         white-space: normal;
     }
@@ -240,10 +252,15 @@
         width: max-content;
     }
 
+    .nomes {
+
+        white-space: nowrap;
+    }
+
 }
 
 @media (min-width: 800px) {
-    #tabela-livros {
+    #tabela-livros, #tabela-alunos {
         font-size: 1.2rem;
     }
 

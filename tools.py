@@ -59,6 +59,7 @@ def get_dados_formulario(form):
         "autor": form.autor.data,
         "descricao": form.descricao.data,
         "quantidade": form.quantidade.data,
+        "quantidade_original": form.quantidade.data,
     }
 
 

@@ -124,6 +124,7 @@ def atualizar():
         livro.autor = form.autor.data
         livro.descricao = form.descricao.data
         livro.quantidade = form.quantidade.data
+        livro.quantidade_original = form.quantidade.data
 
         banco_de_dados.session.add(livro)
         banco_de_dados.session.commit()
@@ -134,8 +135,6 @@ def atualizar():
             timer = time.time()
             deletar_imagem(livro.id_bd)
             arquivo.save(f"{dir_path}/capa_{livro.id_bd}-{timer}.jpg")
-
-        flash("Item editado com sucesso!", "success")
     else:
         flash(f"Não foi possivel editar o livro verifique as informações inseridas e tente novamente!", "warning")
         return redirect(url_for("editar", id=request.form["codigo"]))
@@ -198,11 +197,13 @@ def reservar_livro(id):
 
 
     if usuario_atual.id_livro == 0:
+        usuario_atual.id_livro_quantidade = id + livro.quantidade_original - livro.quantidade
         livro.quantidade -= 1
         usuario_atual.id_livro = id
     else:
         livro_antigo = Livros.query.filter_by(id=usuario_atual.id_livro).first()
         livro_antigo.quantidade += 1
+        usuario_atual.id_livro_quantidade = id + livro.quantidade_original - livro.quantidade
         livro.quantidade -= 1
         usuario_atual.id_livro = id
         if livro_antigo.quantidade > 0:
@@ -227,6 +228,7 @@ def limpar_reserva():
         livro.quantidade += 1
         if livro.quantidade > 0:
             livro.disponibilidade = True
+        usuario_atual.id_livro_quantidade = 0
         usuario_atual.id_livro = 0
 
         banco_de_dados.session.commit()
@@ -256,7 +258,7 @@ def confirmar_reserva(ra):
         "<hr>"
         f"<h2 style='text-align: center; color: black;'>Livro Alugado com Sucesso</h2>"
         f"<h2 style='text-align: center; color: black;'>{livro.nome}</h2>"
-        f"<h3 style='text-align: center;  color: black;'>Código do livro: {usuario.id_livro}</h3>"
+        f"<h3 style='text-align: center;  color: black;'>Código do livro: {usuario.id_livro_quantidade}</h3>"
         "<p style='text-align: center;  color: black;'><img src='cid:image3' width='300px' alt='Imagem do livro'></p><hr>"
         f"<p style='color: black;'><b>Data de saída:</b> {date.today().strftime('%d/%m/%Y')}</p>"
         f"<p style='color: black;'><b>Prazo de devolução máximo:</b> {(date.today() + timedelta(days=15)).strftime('%d/%m/%Y')}</p>"
@@ -265,16 +267,14 @@ def confirmar_reserva(ra):
         f"imagens/{recupera_imagem(livro.id_bd)}"))
     thread.start()
 
-
-    novo_registro = Historico(id=usuario.id_livro, ra=usuario.ra, data_saida=date.today())
+    novo_registro = Historico(id=usuario.id_livro_quantidade, ra=usuario.ra, data_saida=date.today())
     banco_de_dados.session.add(novo_registro)
     usuario.pode_reservar = False
     banco_de_dados.session.commit()
 
-    flash(f"O {usuario.nome} reservou o livro de código {usuario.id_livro}", "info")
+    flash(f"O {usuario.nome} reservou o livro de código {usuario.id_livro_quantidade}", "info")
     thread.join()
     return redirect(url_for("lista_alunos"))
-
 @application.route("/confirmar-retorno/<int:ra>")
 @login_adm_required
 def confirmar_retorno(ra):
@@ -285,12 +285,13 @@ def confirmar_retorno(ra):
 
     usuario.pode_reservar = True
     livro = Livros.query.filter_by(id=usuario.id_livro).first()
-    Historico.query.filter_by(id=usuario.id_livro).order_by(Historico.id_bd.desc()).first().data_retorno = date.today()
+
+
+    Historico.query.filter_by(id=usuario.id_livro_quantidade, ra=usuario.ra).first().data_retorno = date.today()
     usuario.id_livro = 0
+    usuario.id_livro_quantidade = 0
 
     if livro is None:
-        usuario.pode_reservar = True
-        usuario.id_livro = 0
         banco_de_dados.session.commit()
         flash(f"O livro não existe ou foi deletado", "danger")
         return redirect(url_for("lista_alunos"))
@@ -310,6 +311,8 @@ def confirmar_retorno(ra):
 def historico_aluno():
     ra = session['usuario_logado']
     historico = Historico.query.filter_by(ra=ra).all()
+    for r in historico:
+        print(r.data_retorno)
     msg = f"Histórico do aluno {session['nome_usuario']}"
     return render_template("historico_aluno.html", historico=historico, msg=msg)
 
@@ -318,3 +321,22 @@ def historico_aluno():
 def historico_todos_alunos():
     hist = Historico.query.order_by(Historico.id_bd)
     return render_template("historico_global.html", historico=hist)
+
+@application.route("/apagar-aluno/<int:id_bd>")
+@login_adm_required
+def apagar_aluno(id_bd):
+    aluno = Usuarios.query.filter_by(id_bd=id_bd).first()
+    if aluno is None:
+        flash("Aluno não encontrado!", "danger")
+        return redirect(url_for("lista_alunos"))
+
+    if not aluno.pode_reservar:
+        flash("Para realizar essa operação o aluno deve realizar a devolução do livro!", "danger")
+        return redirect(url_for("lista_alunos"))
+
+    banco_de_dados.session.delete(aluno)
+    banco_de_dados.session.commit()
+
+    flash("Aluno deletado com sucesso!", "success")
+
+    return redirect(url_for("lista_alunos"))

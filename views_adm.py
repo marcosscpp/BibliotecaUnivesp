@@ -79,4 +79,51 @@ def criar_usuario():
     banco_de_dados.session.commit()
 
     flash(f"Usuário para {nome} criado com sucesso!", "success")
-    return redirect(url_for("index"))
+    return redirect(url_for("lista_alunos"))
+
+
+@application.route("/editar-aluno/<int:id_bd>")
+@login_adm_required
+def editar_aluno(id_bd):
+    aluno = Usuarios.query.filter_by(id_bd=id_bd).first()
+    if aluno is None:
+        flash("Aluno não encontrado!", "danger")
+        return redirect(url_for("lista_alunos"))
+
+    form = FormularioCadastroUsuarios()
+    form.nome.data = aluno.nome
+    form.email.data = aluno.email
+    form.ra.data = aluno.ra
+
+    return render_template("editar_alunos.html", form=form, ra=form.ra.data)
+
+
+@application.route("/atualizar-alunos", methods=["POST"])
+def atualizar_alunos():
+    form = FormularioCadastroUsuarios(request.form)
+    if form.validate_on_submit():
+        ra_antigo = request.form["ra_current"]
+        print(ra_antigo)
+        aluno = Usuarios.query.filter_by(ra=ra_antigo).first()
+        if aluno is None:
+            flash("Aluno não encontrado!", "warning")
+            return redirect(url_for("lista_alunos"))
+
+        novo_ra = form.ra.data
+        if Usuarios.query.filter_by(ra=novo_ra).first() and int(aluno.ra) != int(novo_ra):
+            flash(f"Não é possivel utilizar o código {novo_ra}.", "success")
+            return redirect(url_for("lista_alunos"))
+
+        aluno.ra = novo_ra
+        aluno.nome = form.nome.data
+        aluno.email = form.email.data
+        aluno.senha = generate_password_hash(form.senha.data)
+
+        banco_de_dados.session.add(aluno)
+        banco_de_dados.session.commit()
+
+    else:
+        flash(f"Não foi possivel editar o perfil do aluno verifique as informações inseridas e tente novamente!", "warning")
+
+    return redirect(url_for("lista_alunos"))
+

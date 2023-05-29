@@ -1,12 +1,13 @@
 {% extends "template.html" %}
-{% block conteudo %}
-<table class="table table-striped table-responsive table-bordered">
+{% block conteudospecial %}
+<div class="tabela-wrap">
+<table class="table table-sm table-striped table-responsive content-table display responsive nowrap content-table tabela-historico">
 
     {% if historico != [] %}
     <h1>{{ msg }}</h1>
     <thead class="thead-default">
         <tr>
-            <th>Código do livro reservado</th>
+            <th>Livro reservado</th>
             <th>Data de reserva</th>
             <th>Data da devolução</th>
         </tr>
@@ -23,6 +24,7 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
 {% else %}
 <h1>O usuário não realizou nenhuma operação</h1>
 {% endif %}
