@@ -36,6 +36,7 @@ with open("dados.json", "r") as bd_conn:
                     `email` VARCHAR(100) NOT NULL,
                     `senha` varchar(100) NOT NULL,
                     `id_livro` int(5) NOT NULL DEFAULT 0,
+                    `id_livro_quantidade` int(5) NOT NULL DEFAULT 0,
                     `pode_reservar` BOOLEAN NOT NULL DEFAULT TRUE,
                     PRIMARY KEY (`id_bd`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;''')
