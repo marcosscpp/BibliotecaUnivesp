@@ -147,12 +147,12 @@
 }
 
 .reservar {
+    color: #212529;
     font-size: 1rem;
     font-weight: bold;
-    margin: 0 auto;
+    margin-right: 5px;
     text-align: center;
-    text-decoration: none;
-}
+    }
 
 td {
     vertical-align: middle;

@@ -1,29 +1,90 @@
 {% extends "template.html" %}
-{% block conteudo %}
-{% for livro in lista_livros %}
-{% set capa_livro = recupera_imagem(livro.id_bd) %}
-  <div class="card-livro">
-    <div class="card-top">
-      <a href="{{ url_for('livro_completo', id=livro.id) }}">
-        <p class="card-id">{{ livro.id }}</p>
-        <img class="card-image" src="{{ url_for('imagem', nome_arquivo=capa_livro) }}">
-      </a>
-    </div>
-    <div class="card-data">
-      <p {% if livro.disponibilidade %} class="text-success status status--sucess"> Disponível
-        {% else %}class="text-danger status status--danger">Indisponível{% endif %}
-      </p>
-      {% if session.get("admnistrador_logado") or session.get("usuario_logado") %}
-      <div class="card-icon">
-        {% if session.get("admnistrador_logado") %}
-        <a href="{{ url_for('editar', id=livro.id) }}"><i class="fa-solid fa-square-pen" style="color: #213454;"></i></a>
-        <a href="{{ url_for('deletar', id=livro.id)}}"><i class="fa-solid fa-trash" style="color: #d1001f;"></i></a>
-        {% elif session.get("usuario_logado") and livro.disponibilidade %}
-        <a href="{{ url_for('reservar_livro', id=livro.id) }}" class="reservar">Reservar <i class="fa-solid fa-book"></i></a>
-        {% elif session.get("usuario_logado") and not livro.disponibilidade %}<i class="fa-solid fa-bookmark"></i>{% endif %}
+
+{% block conteudospecial %}
+<main>
+  <section id="title">
+  <div class="animated-title">
+    <div class="container-title">
+      <h2 class="main-title">Biblioteca</h2>
+      <div class="back-title" id="back-title">
+        <span>U</span>
+        <span>N</span>
+        <span>I</span>
+        <span>V</span>
+        <span>E</span>
+        <span>S</span>
+        <span>P</span>
       </div>
-      {% endif %}
     </div>
   </div>
-{% endfor %}
+  </section>
+
+  <div class="containerCarousel" >
+<div id="carouselLibrary" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselLibrary" data-bs-slide-to="0" class="active buttonCarousel" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" class="buttonCarousel" data-bs-target="#carouselLibrary" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" class="buttonCarousel" data-bs-target="#carouselLibrary" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active" data-bs-interval="3000">
+      <img src="/static/img/livros.jpg" class="d-block w-100" alt="livros">
+
+    </div>
+    <div class="carousel-item" data-bs-interval="2000">
+      <img src="/static/img/livros2.jpg" class="d-block w-100" alt="livros">
+
+    </div>
+    <div class="carousel-item">
+      <img src="/static/img/livros3.jpg" class="d-block w-100" alt="livros">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselLibrary" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselLibrary" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+</div>
+  <section class="mapa">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.6337175437857!2d-46.9312502!3d-23.545672999999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf0690090eeb07%3A0x206aaa52dddf39c9!2sUAB%20Itapevi%20-%20Centro%20Municipal%20de%20Forma%C3%A7%C3%A3o%20de%20Professores%20An%C3%ADsio%20Sp%C3%ADnola%20Teixeira!5e0!3m2!1spt-BR!2sbr!4v1685517084910!5m2!1spt-BR!2sbr" width="600" height="450" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <h3>Localizado no centro da cidade de <span class="red-text">Itapevi</span></h3>
+  </section>
+
+  </div>
+  <section class="expansive-icons">
+    <div class="card-expansive">
+      <div class="icon"><i class="fa-solid fa-user-plus"></i></div>
+      <div class="card-content">
+      <h3 class="card__title">Crie sua conta </h3>
+      <p class="card__desc">Entre em contato dom o administrador de polo e crie sua conta</p>
+       </div>
+    </div>
+     <div class="card-expansive">
+      <div class="icon"><i class="fa-solid fa-book-open"></i></div>
+      <div class="card-content">
+      <h3 class="card__title">Catálogo Extenso e Diversificado</h3>
+      <p class="card__desc"><span class="red-text">+de 600 obras</span> para auxiliar nos seus estudos</p>
+        <a class="card__btn" href="{{ url_for('index') }}">Ver Cátalogo</a>
+       </div>
+    </div>
+     <div class="card-expansive">
+      <div class="icon"><i class="fa-sharp fa-solid fa-bookmark"></i></div>
+      <div class="card-content">
+      <h3 class="card__title">Reserva Fácil de Livros</h3>
+      <p class="card__desc">Com apenas alguns cliques os usuários podem reservar o livro que desejam!</p>
+       </div>
+    </div>
+  </section>
+</main>
+
+
+
 {% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='loading.js') }}"></script>
+<script src="{{ url_for('static', filename='title.js') }}"></script>{% endblock %}

@@ -307,14 +307,14 @@ def confirmar_retorno(ra):
 
 
 @application.route("/historico-aluno")
-@login_user_required
-def historico_aluno():
-    ra = session['usuario_logado']
-    historico = Historico.query.filter_by(ra=ra).all()
-    for r in historico:
-        print(r.data_retorno)
-    msg = f"Histórico do aluno {session['nome_usuario']}"
-    return render_template("historico_aluno.html", historico=historico, msg=msg)
+@application.route("/historico-aluno/<int:ra>")
+def historico_aluno(**kwargs):
+    if session.get("usuario_logado") is None:
+        ra_aluno = kwargs.get("ra")
+    else:
+        ra_aluno = session['usuario_logado']
+    historico = Historico.query.filter_by(ra=ra_aluno).all()
+    return render_template("historico_aluno.html", historico=historico)
 
 @application.route("/historico-alunos")
 @login_adm_required

@@ -1,68 +1,66 @@
 footer {
-    background: url(../img/bg.jpg);
-    margin-top: 80px;
-    text-align: center;
-    padding: 70px 0;
+  background: url(../img/bg.jpg);
+  margin-top: 80px;
+  text-align: center;
+  padding: 70px 0;
 }
 
 .rodape__logo {
-    max-width: 250px;
+  max-width: 250px;
 }
 
 .rodape__icons {
-    display: flex;
-    gap: 30px;
-    justify-content: center;
-    margin-top: 40px;
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  margin-top: 40px;
 }
 
 footer i {
-    color: white;
-    font-size: 1.6rem;
+  color: white;
+  font-size: 1.6rem;
 }
 
 footer .fa-facebook-f:hover {
-    color: #3b5998;
-
+  color: #3b5998;
 }
 
 footer .fa-youtube:hover {
-    color: #ff0000;
-
+  color: #ff0000;
 }
 
 footer .fa-twitter:hover {
-    color: #1da1f2;
+  color: #1da1f2;
 }
 
 footer .fa-instagram:hover {
-    background: -webkit-linear-gradient(#f58529, #fd497e, #4db8f0, #405de6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  background: -webkit-linear-gradient(#f58529, #fd497e, #4db8f0, #405de6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .rodape__texto {
-    color: white;
-    margin-top: 40px;
+  color: white;
+  margin-top: 40px;
 }
 
 .rodape__link {
-    color: white;
-    text-decoration: underline;
+  color: white;
+  text-decoration: underline;
 }
 
 .rodape__link:hover {
-    color: white;
+  color: white;
 }
 
 @media (max-width: 500px) {
-    footer {
+  footer {
     padding: 70px 30px;
-}
-    .rodape__logo {
+  }
+  .rodape__logo {
     max-width: 200px;
-}
-    footer i {
+  }
+  footer i {
     font-size: 1.3rem;
-}
+  }
 }

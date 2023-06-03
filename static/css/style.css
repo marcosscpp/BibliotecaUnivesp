@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;700&family=Poppins:wght@200;600&family=Prompt:wght@100;400;800&family=Quicksand:wght@400;600&family=Source+Sans+3&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;700&family=Poppins:wght@200;600&family=Prompt:wght@100;400;800&family=Quicksand:wght@400;600&family=Source+Sans+3&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,600&display=swap');
+
 @import url("cards.css");
 @import url("menu.css");
 @import url("tabela.css");
@@ -6,32 +8,37 @@
 @import url("rodape.css");
 @import url("detalhes.css");
 @import url("novo-editar.css");
-
+@import url("home.css");
 
 :root {
-    --cor-header: #2C3333;
-    --cor-loader: #AC1C14;
-    --cor-fundo: #FFFBEB;
-    --cor-link-menu: #C6C6C6;
-    --cor-tabela: #AC1C14;
-    --cor-texto-tabela: #000;
-    --cor-tabela-hover: #D6D6D6;
-    --cor-linha-menu: #AC1C14;
-    --cor-botao: #AC1C14;
-    --cor-botao-hover: #FFF;
-    --cor-cabecalho-texto: #FFF;
-    --cor-linha-formulario: #AC1C14;
-    --cor-texto-formulario: #AC1C14;
-    --cor-botao-envio: #AC1C14;
-    --cor-botao-envio-hover: #D92E25;
-    --cor-botao-novo-livro: #4CAF50;
-    --cor-botao-novo-hover: #209C25;
-    --cor-botao-exibicao: #46BCDD;
-    --cor-botao-exibicao-hover: #00BCD4;
-    --cor-botao-limpar: #F44336;
-    --cor-botao-limpar-hover: #E63022;
-    --cor-detalhes: #AC1C14;
-    --cor-mudar-capa: #AC1C14;
+  --cor-header: #2c3333;
+  --cor-loader: #ac1c14;
+  --cor-fundo: #fffbeb;
+  --cor-link-menu: #c6c6c6;
+  --cor-tabela: #ac1c14;
+  --cor-texto-tabela: #000;
+  --cor-tabela-hover: #d6d6d6;
+  --cor-linha-menu: #ac1c14;
+  --cor-botao: #ac1c14;
+  --cor-botao-hover: #fff;
+  --cor-cabecalho-texto: #fff;
+  --cor-linha-formulario: #ac1c14;
+  --cor-texto-formulario: #ac1c14;
+  --cor-botao-envio: #ac1c14;
+  --cor-botao-envio-hover: #d92e25;
+  --cor-botao-novo-livro: #4caf50;
+  --cor-botao-novo-hover: #209c25;
+  --cor-botao-exibicao: #46bcdd;
+  --cor-botao-exibicao-hover: #00bcd4;
+  --cor-botao-limpar: #f44336;
+  --cor-botao-limpar-hover: #e63022;
+  --cor-detalhes: #ac1c14;
+  --cor-mudar-capa: #ac1c14;
+  --cor-codigo: #ac1c14;
+  --cor-titulo-home: #ac1c14;
+  --cor-faixa-mapa: #1c3333;
+  --cor-hover-titulo: #c6c6c6;
+  --cor-borda-mapa: #ac1c14;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -42,48 +49,48 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
 /* Elementos de Neutros */
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 p {
-    margin: 0;
+  margin: 0;
 }
 
 body {
-    background-color: var(--cor-fundo);
-    margin: 0;
-    padding: 0;
+  background-color: var(--cor-fundo);
+  margin: 0;
+  padding: 0;
 }
 
 .alert {
-    z-index: -1;
+  z-index: -1;
 }
 
 .loader-wrapper {
-    align-items: center;
-    background-color: var(--cor-fundo);
-    display: flex;
-    justify-content: center;
-    left:0;
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top:0;
-    z-index: 3;
+  align-items: center;
+  background-color: var(--cor-fundo);
+  display: flex;
+  justify-content: center;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  z-index: 3;
 }
 
-.loader{
+.loader {
   border: 16px solid var(--cor-loader);
   border-top: 16px solid var(--cor-fundo);
   border-radius: 50%;
@@ -93,24 +100,27 @@ body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .main-title {
-    text-align: center;
+  text-align: center;
 }
 
 .container {
-    width: 100vw;
+  width: 100vw;
 }
 
 .mensagem {
-    margin: 0 5vw;
+  margin: 0 5vw;
 }
 
 #messages {
-    z-index: 2;
-    position: relative;
+  z-index: 2;
+  position: relative;
 }
-

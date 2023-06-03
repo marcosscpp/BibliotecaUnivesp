@@ -14,9 +14,9 @@
         {% for aluno in alunos %}
         <tr>
             <td class="align-middle">{{ aluno.ra }}</td>
-            <td class="align-middle nomes">{{ aluno.nome }}</td>
+            <td class="align-middle nomes"><a href="{{ url_for('historico_aluno', ra=aluno.ra) }}">{{ aluno.nome }}</a></td>
             {% if aluno.id_livro != 0 %}
-            <td class="align-middle">{{ aluno.id_livro_quantidade }}</td>
+            <td class="align-middle">Data limite: {{ get_datas(aluno.ra) }}<br>Código do livro: {{ aluno.id_livro_quantidade }}</td>
             <td class="align-middle">
                 {% if aluno.pode_reservar %}
                 <a href="{{ url_for('confirmar_reserva', ra=aluno.ra) }}">Confirmar Reserva</a>
@@ -24,7 +24,7 @@
                 <a href="{{ url_for('confirmar_retorno', ra=aluno.ra) }}">Confirmar Retorno</a>
                 {% endif %}
             {% else %}
-            <td class="align-middle"><i class="fa-solid fa-ban" style="color: #e90c0c;"></i></td>
+            <td class="align-middle"><i class="fa-solid fa-ban" style="color: #e90c0c;"></i>Sem reservas</td>
             <td>
             {% endif %}
                 <a href="{{ url_for('apagar_aluno', id_bd=aluno.id_bd) }}"><i class="fa-solid fa-trash" style="color: #d1001f;"></i></a>

@@ -1,118 +1,183 @@
 .menu > .detalhes-livros {
-    margin: 0;
+  margin: 0;
 }
 
-
 .detalhes-livros {
-    background: linear-gradient(204deg, var(--cor-detalhes), var(--cor-header));
-    display: flex;
-    font-family: Montserrat, sans-serif;
-    gap: 40px;
-    margin-top: -30px;
-    padding: 50px;
+  background: linear-gradient(204deg, var(--cor-detalhes), var(--cor-header));
+  display: flex;
+  font-family: Montserrat, sans-serif;
+  gap: 65px;
+  margin-top: -30px;
+  padding: 50px;
 }
 
 .livros-dados {
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 10px 0;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 0;
 }
 
 .detalhes-img {
-    height: auto;
-    margin-left: 80px;
-    width: 25%;
+  height: auto;
+  margin-left: 80px;
+  width: 25%;
 }
 
 .detalhes-info {
-    align-items: center;
-    display: flex;
-    gap: 40px;
-    margin-top: 20px;
+  align-items: center;
+  display: flex;
+  gap: 40px;
+  margin-top: 20px;
 }
 
-
 .detalhes-top {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .titulo-livro {
-    font-size: 34px;
-    font-weight: 700;
+  font-size: 34px;
+  font-weight: 700;
 }
 
-.remover, .editar {
-    display: flex;
-    align-items: center;
-}
-
+.remover,
 .editar {
-
+  display: flex;
+  align-items: center;
 }
 
-.remover {
-
+.botao {
+  align-items: center;
+  background: white;
+  border-radius: 13px;
+  color: var(--cor-detalhes);
+  display: flex;
+  font-weight: bold;
+  font-size: 14px;
+  gap: 10px;
+  padding: 5px 12px;
+  transition: 0.3s;
 }
 
 .disponivel {
-    background-color: #90EE90;
-    border-radius: 50px;
-    color: green;
-    font-weight: bold;
-    padding: 7px 17px;
+  background-color: #90ee90;
+  border-radius: 50px;
+  color: green;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 0 8px;
+}
+
+.indisponivel {
+  border-radius: 50px;
+  color: red;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 0 8px;
+}
+
+.categoria {
+  font-size: 12px;
+  font-style: italic;
+  width: max-content;
 }
 
 .detalhes-share {
-    align-items: center;
-    border-top: solid white 1px;
-    display: flex;
-    font-size: 14px;
-    gap: 14px;
-    padding-top: 12px;
-    width: 500px;
+  align-items: center;
+  border-top: solid white 1px;
+  display: flex;
+  font-size: 14px;
+  gap: 14px;
+  padding-top: 12px;
+  width: 500px;
 }
 
 .detalhes-share-texto {
-    margin-right: 14px;
+  margin-right: 14px;
 }
 
 .detalhes-icon {
-    background-color: white;
-    border-radius: 50%;
-    color: var(--cor-detalhes);
-    display: inline-block;
-    text-align: center;
-    transition: .5s;
-    padding: 5px;
-    width: 32px;
+  background-color: white;
+  border-radius: 50%;
+  color: var(--cor-detalhes);
+  display: inline-block;
+  text-align: center;
+  transition: 0.5s;
+  padding: 5px;
+  width: 32px;
 }
 
-.detalhes-icon:hover {
-    color: white;
-    background-color: transparent;
+.detalhes-icon:hover,
+.botao:hover {
+  color: white;
+  background-color: transparent;
 }
 
 .buttons-detalhes {
-    display: flex;
-    margin-top: 30px;
+  display: flex;
+  gap: 40px;
+  margin-top: 30px;
 }
 
 .descricao-titulo {
-    font-size: 18px;
-    font-weight: bold;
-    color: var(--cor-linha-menu);
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--cor-detalhes);
 }
 
 .descricao {
-    display: flex;
-    flex-direction: column;
-    margin-top: 70px;
-    padding: 0 100px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 70px;
+  padding: 0 100px;
 }
 
 .descricao p {
-    text-align: justify;
+  text-align: justify;
+}
+
+@media (max-width: 600px) {
+  .detalhes-livros {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .detalhes-img {
+    margin: 0 auto;
+    width: 60%;
+  }
+
+  .detalhes-top {
+    text-align: center;
+  }
+
+  .detalhes-info,
+  .buttons-detalhes {
+    justify-content: center;
+  }
+
+  .buttons-detalhes {
+    margin-top: 60px;
+  }
+
+  .detalhes-share {
+    justify-content: center;
+    margin: 50px auto 0 auto;
+    width: 50%;
+  }
+
+  .detalhes-share-texto {
+    display: none;
+  }
+
+  .descricao-titulo {
+    margin-bottom: 16px;
+  }
+
+  .descricao,
+  .descricao p {
+    text-align: center;
+  }
 }

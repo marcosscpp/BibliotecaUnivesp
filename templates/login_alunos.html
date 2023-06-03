@@ -11,7 +11,7 @@
             {{ form.ra.label }}
         </div>
         <div class="grupo-form">
-            <i class="fa-solid fa-lock"></i>
+            <i class="fa-solid fa-eye" id="eyepass"></i>
             {{ form.senha(class="campo", placeholder=" ") }}
             {{ form.senha.label }}
         </div>
@@ -21,3 +21,5 @@
     </div>
 </form>
 {% endblock %}
+
+{% block script %}<script src="{{ url_for('static', filename='eyepass.js') }}"></script>{% endblock %}

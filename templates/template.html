@@ -11,9 +11,12 @@
   <script src="https://kit.fontawesome.com/c6d6aa1dd7.js" crossorigin="anonymous"></script>
   <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='jquery.js') }}"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" />
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
 </head>
 
 <body>
+
   <header class="menu">
     <nav class="menu__nav navbar navbar-expand-lg bg-body-tertiary">
       <div class="menu__left">
@@ -24,7 +27,7 @@
             <div class="bar3"></div>
           </div>
         </button>
-        <a class="navbar-brand" href="#"><img class="menu__logo" src="/static/img/logo_univesp.png"></a>
+        <a class="navbar-brand" href="{{ url_for('home') }}"><img class="menu__logo" src="/static/img/logo_univesp.png"></a>
       </div>
 
 
@@ -111,7 +114,7 @@
 
 
 <footer>
-  <img class="rodape__logo" src="/static/img/logo_rodape.png">
+  <a href="{{ url_for('home') }}"><img class="rodape__logo" src="/static/img/logo_rodape.png"></a>
   <div class="rodape__icons">
     <a href="https://www.facebook.com/univespoficial/"><i class="fa-brands fa-facebook-f"></i></a>
     <a href="https://youtube.com/@univesptv"><i class="fa-brands fa-youtube"></i></a>

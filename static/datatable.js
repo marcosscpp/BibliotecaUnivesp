@@ -2,7 +2,7 @@ $(document).ready(function () {
   $("#tabela-livros").DataTable({
     responsive: true,
     responsive: {
-        details: false
+      details: false,
     },
     columns: [
       null,
@@ -31,4 +31,3 @@ $(document).ready(function () {
     targets: "_all",
   });
 });
-

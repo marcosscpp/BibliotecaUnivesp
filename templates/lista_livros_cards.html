@@ -30,9 +30,10 @@
   {% set capa_livro = recupera_imagem(livro.id_bd) %}
   <div class="card-livro">
     <div class="card-top">
+      <h3 class="nome-card">{{ livro.nome }}</h3>
       <a href="{{ url_for('livro_completo', id=livro.id) }}">
         <p class="card-id">{{ livro.id }}</p>
-        <img class="card-image" src="{{ url_for('imagem', nome_arquivo=capa_livro) }}">
+       <div class="teste"><img class="card-image" src="{{ url_for('imagem', nome_arquivo=capa_livro) }}"></div>
       </a>
     </div>
     <div class="card-data">

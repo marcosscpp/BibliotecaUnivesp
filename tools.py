@@ -130,6 +130,6 @@ def get_datas(ra):
     if not user:
         data = Historico.query.filter(Historico.ra == ra, Historico.data_retorno.is_(None)).first().data_saida
         data_retorno_maximo = (data + timedelta(days=15)).strftime('%d/%m/%Y')
-        return "Data limite de devolução: " + str(data_retorno_maximo)
+        return str(data_retorno_maximo)
     else:
         return "O usuário não tem livros pendentes"
